@@ -1,11 +1,13 @@
 #include <iostream>
 #include <random>
 #include <string>
+#include <vector>
 
 using std::cin;
 using std::cout;
 using std::endl;
 using std::string;
+using std::vector;
 
 class Creature
 {
@@ -14,13 +16,13 @@ public:
   void print();
   unsigned int getValue();
   virtual string getInfo() = 0; // Pure virtual method (Makes the class abstract)
-
-  static std::random_device rd;
-  static std::mt19937 gen;
+  static Creature *fight(Creature *first, Creature *second);
 
 protected:
   unsigned int value{};
   string name;
+  static std::random_device rd;
+  static std::mt19937 gen;
 
 private:
 };
@@ -40,6 +42,18 @@ void Creature::print()
 unsigned int Creature::getValue()
 {
   return value;
+}
+
+Creature *Creature::fight(Creature *first, Creature *second)
+{
+  if (first->getValue() > second->getValue())
+  {
+    return first;
+  }
+  else
+  {
+    return second;
+  }
 }
 
 class Applods : public Creature
@@ -121,59 +135,40 @@ string Cruds::getInfo()
   return "Name: " + this->name + " Damage: " + std::to_string(this->value);
 }
 
+void displayAll(vector<Creature *> &someCreatures)
+{
+  for (int i = 0; i < someCreatures.size(); i++)
+  {
+    cout << someCreatures[i]->getInfo() << endl;
+  }
+}
+
 int main()
 {
-  Applods myApplods[10];
-  Barbles myBarbles[10];
-  Cruds myCruds[10];
-
+  vector<Creature *> myCreatures;
   for (int i = 0; i < 10; i++)
   {
-    cout << myApplods[i].getInfo() << endl;
+    myCreatures.push_back(new Applods());
+    myCreatures.push_back(new Barbles());
+    myCreatures.push_back(new Cruds());
   }
 
-  cout << "----------------" << endl;
+  displayAll(myCreatures);
 
-  for (int i = 0; i < 10; i++)
+  cout << "---------------------------" << endl;
+  cout << "---------- Fight ----------" << endl;
+  cout << "---------------------------" << endl;
+
+  vector<Creature *> winners;
+
+  for (int i = 0; i < myCreatures.size(); i += 2)
   {
-    cout << myBarbles[i].getInfo() << endl;
-  }
-
-  cout << "----------------" << endl;
-
-  for (int i = 0; i < 10; i++)
-  {
-    cout << myCruds[i].getInfo() << endl;
-  }
-
-  for (int i = 0; i < 10; i++)
-  {
-    unsigned int a = myApplods[i].getValue();
-    unsigned int b = myBarbles[i].getValue();
-    unsigned int c = myCruds[i].getValue();
-
-    if (a > b)
-    {
-      if (a > c)
-      {
-        cout << "The Applod won" << endl;
-      }
-      else
-      {
-        cout << "The Crud won" << endl;
-      }
-    }
-    else
-    {
-      if (b > c)
-      {
-        cout << "The Barble won" << endl;
-      }
-      else
-      {
-        cout << "The Crud won" << endl;
-      }
-    }
+    Creature *winner = Creature::fight(myCreatures[i], myCreatures[i + 1]);
+    cout << "The fighters: " << endl;
+    cout << " " << myCreatures[i]->getInfo() << endl;
+    cout << " " << myCreatures[i + 1]->getInfo() << endl;
+    cout << "The winner was: " << winner->getInfo() << endl;
+    winners.push_back(winner);
   }
 
   cin.get();
