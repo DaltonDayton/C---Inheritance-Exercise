@@ -1,25 +1,36 @@
 #include <iostream>
 #include <random>
+#include <string>
 
 using std::cin;
 using std::cout;
 using std::endl;
+using std::string;
 
 class Creature
 {
 public:
+  Creature(const string &name);
   void print();
   unsigned int getValue();
+  virtual string getInfo() = 0; // Pure virtual method (Makes the class abstract)
+
   static std::random_device rd;
   static std::mt19937 gen;
 
 protected:
   unsigned int value{};
+  string name;
 
 private:
 };
 std::random_device Creature::rd;
 std::mt19937 Creature::gen(Creature::rd());
+
+Creature::Creature(const string &name)
+{
+  this->name = name;
+}
 
 void Creature::print()
 {
@@ -35,14 +46,20 @@ class Applods : public Creature
 {
 public:
   Applods();
+  string getInfo();
 
 private:
 };
 
-Applods::Applods()
+Applods::Applods() : Creature("applod")
 {
   std::uniform_int_distribution<> distrib(1, 5);
   this->value = distrib(Creature::gen);
+}
+
+string Applods::getInfo()
+{
+  return "Name: " + this->name + " Damage: " + std::to_string(this->value);
 }
 
 class Barbles : public Creature
@@ -51,12 +68,13 @@ public:
   Barbles();
   void print();
   unsigned int getValue();
+  string getInfo();
 
 private:
   unsigned int secondValue{};
 };
 
-Barbles::Barbles()
+Barbles::Barbles() : Creature("barble")
 {
   std::uniform_int_distribution<> distrib(1, 2);
   this->value = distrib(Creature::gen);
@@ -74,15 +92,21 @@ unsigned int Barbles::getValue()
   return this->value + this->secondValue;
 }
 
+string Barbles::getInfo()
+{
+  return "Name: " + this->name + " Damage 1: " + std::to_string(this->value) + " Damage 2: " + std::to_string(this->secondValue);
+}
+
 class Cruds : public Creature
 {
 public:
   Cruds();
+  string getInfo();
 
 private:
 };
 
-Cruds::Cruds()
+Cruds::Cruds() : Creature("crud")
 {
   std::uniform_int_distribution<> distrib(1, 2);
   this->value = distrib(Creature::gen);
@@ -90,6 +114,11 @@ Cruds::Cruds()
   {
     this->value = 5;
   }
+}
+
+string Cruds::getInfo()
+{
+  return "Name: " + this->name + " Damage: " + std::to_string(this->value);
 }
 
 int main()
@@ -100,21 +129,21 @@ int main()
 
   for (int i = 0; i < 10; i++)
   {
-    myApplods[i].print();
+    cout << myApplods[i].getInfo() << endl;
   }
 
   cout << "----------------" << endl;
 
   for (int i = 0; i < 10; i++)
   {
-    myBarbles[i].print();
+    cout << myBarbles[i].getInfo() << endl;
   }
 
   cout << "----------------" << endl;
 
   for (int i = 0; i < 10; i++)
   {
-    myCruds[i].print();
+    cout << myCruds[i].getInfo() << endl;
   }
 
   for (int i = 0; i < 10; i++)
