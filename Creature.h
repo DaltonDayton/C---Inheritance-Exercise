@@ -13,6 +13,7 @@ public:
   unsigned int getValue();
   virtual string getInfo() = 0; // Pure virtual method (Makes the class abstract)
   static Creature *fight(Creature *first, Creature *second);
+  string getName() { return this->name; }
 
 protected:
   unsigned int value{};

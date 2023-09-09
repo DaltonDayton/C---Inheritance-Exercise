@@ -46,5 +46,34 @@ int main()
     winners.push_back(winner);
   }
 
+  cout << "---------------------------" << endl;
+  cout << "-------- Winners ----------" << endl;
+  cout << "---------------------------" << endl;
+
+  // cycle through winners and count each type
+  int applodCount = 0;
+  int barbleCount = 0;
+  int crudCount = 0;
+
+  for (int i = 0; i < winners.size(); i++)
+  {
+    if (winners[i]->getName() == "applod")
+    {
+      applodCount++;
+    }
+    else if (winners[i]->getName() == "barble")
+    {
+      barbleCount++;
+    }
+    else if (winners[i]->getName() == "crud")
+    {
+      crudCount++;
+    }
+  }
+
+  cout << "Applods: " << applodCount << endl;
+  cout << "Barbles: " << barbleCount << endl;
+  cout << "Cruds: " << crudCount << endl;
+
   return 0;
 }
